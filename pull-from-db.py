@@ -20,10 +20,6 @@ def pullData ( symbol ):
 	print ('Pulling data for: ' + symbol)
 	#time.sleep(5)
 	coin_data = collection.find({"ID": symb},{"openPrice":1,"highPrice":1,"lowPrice":1,"volume":1,"closeTime":1})
-	#for item in collection.find({"ID": symb}):
-		#print (item)
-#	for coin in coin_data:
-#		print(str(coin['openPrice']) + ',' + str(coin['highPrice']) + ',' + str(coin['lowPrice']) + ',' + str(coin['volume']) + ',' + str(coin['closeTime']))
 	with open('%s.csv' % symbol, 'w', newline = '') as f_output:
 		csv_output = csv.writer(f_output)
 		csv_output.writerow(field_names)
@@ -40,11 +36,16 @@ def pullData ( symbol ):
 	print('Done pulling data. Output file \"%s.csv created\"' % symbol)
 
 # take our arguments
+if len(sys.argv) <= 1:
+	print('Please enter a symbol \"pull-from-db BTCUSDT\"')
+	exit(1)
 symb = sys.argv[1]
 
 # see if supplied argument is valid
 if any(sym in symb for sym in validSymbolList):
+	# if it is valid, pull our data
 	pullData( symbol = symb )
 else:
 	symList = ','.join(map(str,validSymbolList))
 	print('Invalid symbol \"' + symb + '\", please use one of the following: ' + symList)
+	exit(1)
